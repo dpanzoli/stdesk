@@ -1,22 +1,13 @@
-var http = require('http');
+var express = require('express')
+var app = express()
 
-var retour = {
-  retCode: 0,
-  retClass: 'success',
-  message: 'Ce serveur sait aussi envoyer des données JSON !'    
-}
+app.get('/', function(req, res) {
+  res.send('Hello Scalingo') 
+})
 
-var app = http.createServer(function(req, res) {
-    
-    res.writeHead(200, {'Content-Type': 'application/json; charset=utf-8'});
-    res.write(JSON.stringify(retour));
-    res.end();
-});  
-
-app.listen(3000);
-
-
-
-
-
+var server = app.liste,(process.env.port || 3000, function() {
+  var host = server.address().address
+  var port = server.address().port
+  console.log('App listening at http://%s:%s', host, port)
+})
 
