@@ -3,7 +3,8 @@ const mysql = require('mysql');
 var app = express()
 
 const db = mysql.createConnection({
-	host: "71ebf0d0-597c-4bbe-8bf8-5be0f49429cb.stdesk-4200.mysql.dbs.scalingo.com:34974",
+	host: "71ebf0d0-597c-4bbe-8bf8-5be0f49429cb.stdesk-4200.mysql.dbs.scalingo.com",
+	port: 34974,
 	user: "stdesk_4200",
 	password: "Mhia_NgdX-rJlSoQzqry"
 });
