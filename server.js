@@ -2,7 +2,7 @@ var express = require('express')
 var app = express()
 
 app.get('/', function(req, res) {
-  res.send('Hello Scalingo') 
+  res.send(process.env.SCALINGO_MYSQL_URL+", "+process.env.DATABASE_URL) 
 })
 
 var server = app.listen(process.env.PORT || 3000, function() {
