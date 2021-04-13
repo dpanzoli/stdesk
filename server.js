@@ -3,11 +3,11 @@ const mysql = require('mysql');
 var app = express()
 
 const db = mysql.createConnection({
-	host: "71ebf0d0-597c-4bbe-8bf8-5be0f49429cb.stdesk-4200.mysql.dbs.scalingo.com",
-	port: 34974,
-	user: "stdesk_4200",
-	password: "Mhia_NgdX-rJlSoQzqry",
-	database: "stdesk_4200"
+	host: process.env.DATABASE_HOST,
+	port: process.env.DATABASE_PORT,
+	user: process.env.DATABASE_USER,
+	password: process.env.DATABASE_PWD,
+	database: process.env.DATABASE_DBNAME
 });
 
 app.get('/', function(req, res) {
