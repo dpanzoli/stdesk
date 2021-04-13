@@ -10,10 +10,10 @@ const db = mysql.createConnection({
 
 app.get('/', function(req, res) {
 
-	con.connect(function(err) {
+	db.connect(function(err) {
 		if (err) throw err;
 		console.log("Connecté à la base de données MySQL!");
-		con.query("SELECT * from Users;", function (err, result) {
+		db.query("SELECT * FROM Users;", function (err, result) {
 			if (err) throw err;
 			res.send(result);
 		});
