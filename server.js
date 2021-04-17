@@ -1,40 +1,64 @@
 const dotenv = require('dotenv');
 dotenv.config();
-var express = require('express');
-const mysql = require('mysql');
-var app = express();
 
-const db = mysql.createConnection({
+/**
+* Database 
+*/
+const mysql = require('mysql2');
+
+const pool = mysql.createPool({
 	host: process.env.DATABASE_HOST,
 	port: process.env.DATABASE_PORT,
 	user: process.env.DATABASE_USER,
 	password: process.env.DATABASE_PWD,
-	database: process.env.DATABASE_DBNAME
+	database: process.env.DATABASE_DBNAME,
+	waitForConnections: true,
+	connectionLimit: 10,
+	queueLimit: 0
 });
 
+// Developpement local : accès au serveur SGBD grâce à un tunnel sécurisé
+// scalingo --app stdesk db-tunnel SCALINGO_MYSQL_URL
+
+/**
+* Emailing
+*/ 
 var nodemailer = require('nodemailer');
 
 var transporter = nodemailer.createTransport({
 	host: process.env.EMAIL_HOST,
 	port: 465,
-	secure: true, // upgrade later with STARTTLS
+	secure: true,
 	auth: {
 		user: process.env.EMAIL_USER,
 		pass: process.env.EMAIL_PWD
 	}
 });
 
+/**
+* Routes
+*/
+var express = require('express');
+var app = express();
 
 app.get('/', function(req, res) {
 
-	db.connect(function(err) {
-		if (err) throw err;
-		console.log("Connecté à la base de données MySQL!");
-		db.query("SELECT * FROM Users;", function (err, result) {
-			if (err) throw err;
-			res.send(result);
+	if (req.query.idUser) {
+		pool.execute('select * from Users where id = ?', 
+		[req.query.idUser],
+		function(err, results, fields) {
+			if (err) { 
+				console.log(err); res.sendStatus(500);
+			} else {
+				res.json(results);
+			}
 		});
-	});
+	} else  {
+		pool.execute('select * from Users', 
+		function(err, results, fields) {
+			res.json(results);
+		});
+	}
 });
 
 app.get('/notify', function(req, res) {
